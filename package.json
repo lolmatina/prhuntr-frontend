@@ -12,10 +12,22 @@
     "prepare": "lint-staged"
   },
   "dependencies": {
+    "@mantine/core": "^8.3.9",
+    "@mantine/hooks": "^8.3.9",
+    "@reduxjs/toolkit": "^2.11.0",
+    "@tabler/icons-react": "^3.35.0",
+    "@types/redux-persist": "^4.3.1",
     "bun-plugin-tailwind": "^0.1.2",
+    "dotenv": "^17.2.3",
+    "formik": "^2.4.9",
+    "framer-motion": "^12.23.26",
     "react": "^19",
     "react-dom": "^19",
-    "tailwindcss": "^4.1.11"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.10.1",
+    "redux-persist": "^6.0.0",
+    "tailwindcss": "^4.1.11",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

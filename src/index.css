@@ -1,4 +1,8 @@
+@layer theme, base, mantine, components, utilities;
+
 @import "tailwindcss";
+
+@import "@mantine/core/styles.layer.css";
 
 @layer base {
   :root {
@@ -6,7 +10,7 @@
   }
 
   body {
-    @apply grid place-items-center min-w-[320px] min-h-screen relative m-0;
+    @apply min-w-[320px] min-h-screen relative m-0;
   }
 }
 
