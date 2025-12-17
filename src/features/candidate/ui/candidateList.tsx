@@ -6,8 +6,8 @@ import {
 } from "../api/candidateApiSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect } from "react";
-import { Card, Grid, Tabs } from "@mantine/core";
 import { CandidatePreviewCard } from "@/entities/candidate/ui/candidatePreviewCard";
+import { Card, Tabs } from "antd-mobile";
 
 export function CandidateList({ className }: { className?: string }) {
   const { currentFilters } = useSelector(
@@ -49,28 +49,23 @@ export function CandidateList({ className }: { className?: string }) {
   );
 
   return (
-    <Card className={className}>
-      <Tabs defaultValue={type || "top"}>
-        <Tabs.List>
-          <Tabs.Tab value="top" onClick={() => setType("top")}>
-            Топ кандидаты
-          </Tabs.Tab>
-          <Tabs.Tab value="regular" onClick={() => setType("regular")}>
-            Остальные
-          </Tabs.Tab>
-        </Tabs.List>
+    <div className={`${className} px-4`}>
+      <Tabs
+        stretch={false}
+        style={{
+          "--active-line-color": "#000",
+          "--active-title-color": "#000",
+        }}
+        defaultActiveKey={type || "top"}
+        onChange={(tab: string) => setType(tab)}>
+        <Tabs.Tab key="top" title="Топ кандидаты" />
+        <Tabs.Tab key="regular" title="Остальные" />
       </Tabs>
-      <Grid columns={1}>
-        {candidates &&
-          candidates.map((candidate) => (
-            <>
-              <CandidatePreviewCard
-                candidate={candidate}
-                className="w-full h-20"
-              />
-            </>
-          ))}
-      </Grid>
-    </Card>
+      <div className="flex flex-col gap-1 py-4">
+        {candidates.map((candidate) => (
+          <CandidatePreviewCard candidate={candidate} key={candidate.id} />
+        ))}
+      </div>
+    </div>
   );
 }

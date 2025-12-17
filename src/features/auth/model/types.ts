@@ -1,7 +1,7 @@
 import type { User } from "@/entities/user/model";
 
 export interface LoginCredentials {
-  role_id: 2 | 3;
+  role: "employer" | "applicant";
   email: string;
   password: string;
 }
@@ -16,7 +16,7 @@ export interface LoginResponse {
 }
 
 export interface RegisterCredentials {
-  role_id: 2 | 3;
+  role: "employer" | "applicant";
   email: string;
   password: string;
   confirm_password: string;

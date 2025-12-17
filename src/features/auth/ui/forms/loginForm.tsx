@@ -26,7 +26,7 @@ export function LoginForm({ role }: { role: keyof typeof Roles }) {
     initialValues: {
       email: "",
       password: "",
-      role_id: Roles[role as keyof typeof Roles],
+      role: role,
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -39,7 +39,7 @@ export function LoginForm({ role }: { role: keyof typeof Roles }) {
     onSubmit: async (values, { setStatus, setSubmitting }) => {
       try {
         await login(values).unwrap();
-        navigate("/search");
+        navigate("/home");
       } catch (error) {
         setSubmitting(false);
         if (

@@ -24,7 +24,7 @@ export function RegisterForm({ role }: { role: keyof typeof Roles }) {
       email: "",
       password: "",
       confirm_password: "",
-      role_id: Roles[role as keyof typeof Roles],
+      role: role,
     },
     validationSchema: Yup.object({
       email: Yup.string()

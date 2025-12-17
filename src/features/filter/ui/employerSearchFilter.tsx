@@ -1,24 +1,19 @@
-import {
-  Accordion,
-  Button,
-  Card,
-  Checkbox,
-  Group,
-  MultiSelect,
-  NumberInput,
-  Text,
-  Title,
-} from "@mantine/core";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "@/app/store";
 import { setEmployerFilters } from "@/entities/filter/api";
+import { Button, CheckList, Picker, SearchBar } from "antd-mobile";
+import { IconAdjustments } from "@tabler/icons-react";
+import { Popup } from "@/shared/ui/popup";
+import { label } from "framer-motion/client";
 
 export function EmployerSearchFilter({ className }: { className?: string }) {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
+  const [visible, setVisible] = useState(false);
+  const [pickerVisible, setPickerVisible] = useState(false);
 
   const { cities: cityList } = useSelector(
     (state: RootState) => state.employerFilters
@@ -53,87 +48,77 @@ export function EmployerSearchFilter({ className }: { className?: string }) {
   }, [navigate]);
 
   return (
-    <Card className={className} withBorder>
-      <Group justify="space-between" align="center" mb={20}>
-        <Title order={3}>Фильтры</Title>
-        <Button
-          onClick={resetFilters}
-          size="xs"
-          variant="transparent"
-          color="dark">
-          Сбросить
-        </Button>
-      </Group>
-      <Accordion multiple defaultValue={["cities", "age", "gender"]}>
-        <Accordion.Item value="cities">
-          <Accordion.Control>
-            <Text fw={500}>Город</Text>
-          </Accordion.Control>
-          <Accordion.Panel>
-            <MultiSelect
-              placeholder="Выберите город"
-              data={cityList.map((city) => city.name)}
-              value={cities}
-              onChange={(value) => updateFilter("cities[]", value)}
-            />
-          </Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="age">
-          <Accordion.Control>
-            <Text fw={500}>Возраст</Text>
-          </Accordion.Control>
-          <Accordion.Panel>
-            <Group>
-              <Group>
-                <Text>От</Text>
-                <NumberInput
-                  value={parseInt(ageFrom || "18")}
-                  onChange={(event) => updateFilter("ageFrom", event as number)}
-                />
-              </Group>
-              <Group>
-                <Text>До</Text>
-                <NumberInput
-                  value={parseInt(ageTo || "60")}
-                  onChange={(event) => updateFilter("ageTo", event as number)}
-                />
-              </Group>
-            </Group>
-          </Accordion.Panel>
-        </Accordion.Item>
-        <Accordion.Item value="gender">
-          <Accordion.Control>
-            <Text fw={500}>Пол</Text>
-          </Accordion.Control>
-          <Accordion.Panel>
-            <Checkbox
-              label="Мужчина"
-              checked={genders.includes("male")}
-              onChange={(event) =>
-                updateFilter(
-                  "genders[]",
-                  event.target.checked
-                    ? [...genders, "male"]
-                    : genders.filter((gender) => gender !== "male")
-                )
-              }
-            />
-            <Checkbox
-              mt={10}
-              label="Женщина"
-              checked={genders.includes("female")}
-              onChange={(event) =>
-                updateFilter(
-                  "genders[]",
-                  event.target.checked
-                    ? [...genders, "female"]
-                    : genders.filter((gender) => gender !== "female")
-                )
-              }
-            />
-          </Accordion.Panel>
-        </Accordion.Item>
-      </Accordion>
-    </Card>
+    <div className="bg-white p-4 flex gap-2 justify-between">
+      <SearchBar
+        placeholder="Имя или должность"
+        style={{
+          "--background": "#ffffff",
+          "--height": "40px",
+          "--border-radius": "8px",
+          fontSize: "14px",
+          lineHeight: "20px",
+          borderColor: "#E2E8F0",
+          borderWidth: "1px",
+          borderRadius: "8px",
+          width: "100%",
+        }}
+      />
+      <button
+        title="Фильтры"
+        onClick={() => setVisible(true)}
+        className="w-10 h-10 rounded-lg flex justify-center items-center bg-light">
+        <IconAdjustments className="text-primary" size={20} />
+      </button>
+      <Popup
+        height={380}
+        visible={visible}
+        onClose={() => setVisible(false)}
+        onMaskClick={() => setVisible(false)}>
+        <h2 className="text-center font-medium text-base leading-6 py-2">
+          Фильтр
+        </h2>
+        <div className="px-2 py-4 text-main">
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="city"
+              className="block text-[14px] leading-5 font-medium">
+              Город
+            </label>
+            <select
+              name="city"
+              id="city"
+              value={0}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setPickerVisible(true);
+              }}
+              className="w-full border border-[#E2E8F0] py-2 px-3 rounded-lg">
+              <option value="">Выберите город</option>
+              {cityList &&
+                cityList.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+      </Popup>
+      <Popup
+        visible={pickerVisible}
+        onClose={() => setPickerVisible(false)}
+        onMaskClick={() => setPickerVisible(false)}
+        height={300}>
+        <CheckList>
+          {cityList &&
+            cityList.map((city) => (
+              <CheckList.Item value={city.id} key={city.id}>
+                {city.name}
+              </CheckList.Item>
+            ))}
+        </CheckList>
+      </Popup>
+    </div>
   );
 }
